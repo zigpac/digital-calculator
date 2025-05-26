@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Trigger the workflow on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # Grant write permissions for GitHub Pages
+      id-token: write # Grant write permissions for OIDC token
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Checks out the repository's code
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4 # Configures GitHub Pages
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3 # Uploads the static files
+        with:
+          # Specify the path to the files/directory to upload.
+          # Default is root of the repository.
+          # For this project, we want to upload all files in the root.
+          path: '.'
+          # The artifact will include index.html, style.css, and script.js
+          # and any other files in the root.
+
+      - name: Deploy to GitHub Pages
+        id: deployment # Give the deployment step an ID
+        uses: actions/deploy-pages@v4 # Deploys the artifact to GitHub Pages
+        # This action will automatically use the artifact uploaded by actions/upload-pages-artifact
+        # and deploy it to the GitHub Pages environment configured by actions/configure-pages.
